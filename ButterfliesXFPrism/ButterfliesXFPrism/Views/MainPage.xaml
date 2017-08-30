@@ -2,27 +2,23 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
-             xmlns:local="clr-namespace:ButterfliesXFPrism.Views;assembly=ButterfliesXFPrism"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="ButterfliesXFPrism.Views.MainPage"
-             Title="MainPage">
+             Title="Butterflies">
 
     <StackLayout>
-        <!--<Label Text="{Binding Source={x:Reference Name=Butterfly}, Path=SelectedItem.Title}"
-            FontSize="Large" />-->
-        <ListView x:Name="phonesList"
-              HasUnevenRows="True"
-              ItemsSource="{Binding Butterfly}">
+        <ListView 
+            ItemsSource="{Binding Butterfly}" 
+            ItemTapped="OnItemTapped"
+            ItemAppearing="ListView_ItemAppearing">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextCell
-                        Text="{Binding Name}"
-                        TextColor="Red"
-                        DetailColor="Green"
-                        />
+                    <ImageCell Text="{Binding Name}" 
+                               TextColor="Navy"
+                               Detail ="{Binding Description}" 
+                               ImageSource="{Binding ImageSource}" />
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
     </StackLayout>
-
 </ContentPage>

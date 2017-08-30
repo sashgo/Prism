@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ButterfliesXFPrism.Models;
+using ButterfliesXFPrism.ViewModels;
 using Xamarin.Forms;
 
 namespace ButterfliesXFPrism.Views
@@ -12,6 +9,17 @@ namespace ButterfliesXFPrism.Views
         public MainPage()
         {
             InitializeComponent();
+        }
+
+        private void OnItemTapped(object sender, ItemTappedEventArgs args)
+        {
+            ((MainPageViewModel)BindingContext).ButterflySelectedCommand.Execute((Butterfly)args.Item);
+            ((ListView)sender).SelectedItem = null;
+        }
+
+        private void ListView_ItemAppearing(object sender, ItemVisibilityEventArgs e)
+        {
+            ((MainPageViewModel)BindingContext).ButterflyAppearingCommand.Execute((Butterfly)e.Item);
         }
     }
 }

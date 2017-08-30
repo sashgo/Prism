@@ -1,34 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿using ButterfliesXFPrism.Views;
+using Prism.Unity;
 using Xamarin.Forms;
+using Microsoft.Practices.Unity;
+using ButterfliesXFPrism.Services.ButterfliesService;
+using ButterfliesXFPrism.ViewModels;
 
 namespace ButterfliesXFPrism
 {
-    public partial class App : Application
+    public partial class App : PrismApplication
     {
         public App()
         {
             InitializeComponent();
-
-            MainPage = new Views.MainPage();
+            MainPage = new MainPage();
         }
 
-        protected override void OnStart()
+        public App(IPlatformInitializer initializer = null) : base(initializer)
         {
-            // Handle when your app starts
         }
 
-        protected override void OnSleep()
+        protected override void OnInitialized()
         {
-            // Handle when your app sleeps
+            InitializeComponent();
+            NavigationService.NavigateAsync("NavigationPage/MainPage");
         }
 
-        protected override void OnResume()
+        protected override void RegisterTypes()
         {
-            // Handle when your app resumes
+            Container.RegisterType<IButterfliesService, ButterfliesService>(new ContainerControlledLifetimeManager());
+
+            Container.RegisterTypeForNavigation<NavigationPage>();
+            Container.RegisterTypeForNavigation<MainPage>();
+            Container.RegisterTypeForNavigation<DetailPage, DetailViewModel>();
         }
     }
 }

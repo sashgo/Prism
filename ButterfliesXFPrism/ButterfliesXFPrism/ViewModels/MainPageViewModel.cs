@@ -1,54 +1,64 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Prism.Mvvm;
+﻿using Prism.Mvvm;
 using ButterfliesXFPrism.Models;
 using System.Collections.ObjectModel;
-using ButterfliesXFPrism.Services.ButterfliesService.Interfaces;
 using Prism.Navigation;
 using ButterfliesXFPrism.Services.ButterfliesService;
+using Prism.Commands;
 
 namespace ButterfliesXFPrism.ViewModels
 {
-    public class MainPageViewModel:BindableBase, INavigationAware
+    public class MainPageViewModel:BindableBase
     {
-        private ObservableCollection<Butterfly> _butterfly;
+
+        private ObservableCollection<Butterfly> _butterflyList;
         public ObservableCollection<Butterfly>  Butterfly 
         {
-            get { return _butterfly;}
+            get { return _butterflyList; }
             set
             {
-                SetProperty(ref _butterfly, value);
+                SetProperty(ref _butterflyList, value);
             }
-       }
-        public MainPageViewModel()
-        {
-            _service = new ButterfliesService();
-
-            Butterfly = new ObservableCollection<Butterfly>(_service.Load(12));
         }
 
-        private IButterfliesService _service;
-        public MainPageViewModel(IButterfliesService service)
+        private DelegateCommand<Butterfly> _butterflySelectedCommand;
+        public DelegateCommand<Butterfly> ButterflySelectedCommand => _butterflySelectedCommand != null ? _butterflySelectedCommand : (_butterflySelectedCommand = new DelegateCommand<Butterfly>(ButterflySelected));
+
+        private DelegateCommand<Butterfly> _butterflyAppearingCommand;
+        public DelegateCommand<Butterfly> ButterflyAppearingCommand => _butterflyAppearingCommand != null ? _butterflyAppearingCommand : (_butterflyAppearingCommand = new DelegateCommand<Butterfly>(CheckForLoad));
+
+        private readonly INavigationService _navigationService;
+        private readonly IButterfliesService _butterflyServicee;
+        public MainPageViewModel(INavigationService navigationService, IButterfliesService butterflyService)
         {
-            _service = service;
+            _navigationService = navigationService;
+            _butterflyServicee = butterflyService;
+            Butterfly = new ObservableCollection<Butterfly>();
+            LoadButterfly();
         }
 
-        public void OnNavigatedFrom(NavigationParameters parameters)
+        private const int CountForLoad = 10;
+        private async void LoadButterfly()
         {
-            throw new NotImplementedException();
+            var butterflies = await _butterflyServicee.Load(CountForLoad, _butterflyList.Count);
+            foreach (var item in butterflies)
+            {
+                Butterfly.Add(item);
+            }
         }
 
-        public void OnNavigatingTo(NavigationParameters parameters)
+        private async void ButterflySelected(Butterfly butterfly)
         {
+            var p = new NavigationParameters();
+            p.Add("butterfly", butterfly);
 
+            await _navigationService.NavigateAsync("DetailPage", p);
         }
 
-        public void OnNavigatedTo(NavigationParameters parameters)
+        private void CheckForLoad(Butterfly butterfly)
         {
-            if (Butterfly == null)
-                Butterfly = new ObservableCollection<Butterfly>(_service.Load(12));
+            var indexCurrent = _butterflyList.IndexOf(butterfly);
+            if(indexCurrent == _butterflyList.Count - 1)
+                LoadButterfly();
         }
     }
 }
