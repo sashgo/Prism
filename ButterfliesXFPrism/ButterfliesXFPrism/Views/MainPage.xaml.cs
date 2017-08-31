@@ -13,13 +13,13 @@ namespace ButterfliesXFPrism.Views
 
         private void OnItemTapped(object sender, ItemTappedEventArgs args)
         {
-            ((MainPageViewModel)BindingContext).ButterflySelectedCommand.Execute((Butterfly)args.Item);
+            ((MainPageViewModel)BindingContext).SelectedCommand.Execute((Butterfly)args.Item);
             ((ListView)sender).SelectedItem = null;
         }
 
         private void ListView_ItemAppearing(object sender, ItemVisibilityEventArgs e)
         {
-            ((MainPageViewModel)BindingContext).ButterflyAppearingCommand.Execute((Butterfly)e.Item);
+            ((MainPageViewModel)BindingContext).AppearingCommand.Execute((Butterfly)e.Item);
         }
     }
 }

@@ -6,8 +6,10 @@
              x:Class="ButterfliesXFPrism.Views.DetailPage"
              Title="{Binding Butterfly.Name}">
 
-    <StackLayout>
-        <Image Source="{Binding Butterfly.ImageSource}" Aspect="AspectFit"/>
-        <Label Text="{Binding Butterfly.Description}" WidthRequest="200" VerticalOptions="Center" HorizontalOptions="Center" />
-    </StackLayout>
+    <ScrollView  Orientation = "Vertical" VerticalOptions="StartAndExpand">
+        <StackLayout>
+            <Image Source="{Binding Butterfly.ImageSource}" HeightRequest="200" Aspect="AspectFit" />
+            <Label Text="{Binding Butterfly.Description}" Margin="20,0,20,0"/>
+        </StackLayout>
+    </ScrollView>
 </ContentPage>

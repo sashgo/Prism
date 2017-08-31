@@ -4,19 +4,21 @@
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="ButterfliesXFPrism.Views.MainPage"
-             Title="Butterflies">
+             Title="{Binding Title}" >
 
     <StackLayout>
         <ListView 
             ItemsSource="{Binding Butterfly}" 
             ItemTapped="OnItemTapped"
-            ItemAppearing="ListView_ItemAppearing">
+            ItemAppearing="ListView_ItemAppearing"
+            HasUnevenRows="True" 
+            Margin="10,0,10,0">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ImageCell Text="{Binding Name}" 
                                TextColor="Navy"
                                Detail ="{Binding Description}" 
-                               ImageSource="{Binding ImageSource}" />
+                               ImageSource="{Binding ImageSource}"/>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

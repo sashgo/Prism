@@ -9,37 +9,46 @@ namespace ButterfliesXFPrism.ViewModels
 {
     public class MainPageViewModel:BindableBase
     {
-
+        private string _title = "Бабочки";
+        public string Title
+        {
+            get { return _title; }
+            set { SetProperty(ref _title, value); }
+        }
         private ObservableCollection<Butterfly> _butterflyList;
         public ObservableCollection<Butterfly>  Butterfly 
         {
             get { return _butterflyList; }
-            set
-            {
-                SetProperty(ref _butterflyList, value);
-            }
+            set { SetProperty(ref _butterflyList, value); }
         }
 
-        private DelegateCommand<Butterfly> _butterflySelectedCommand;
-        public DelegateCommand<Butterfly> ButterflySelectedCommand => _butterflySelectedCommand != null ? _butterflySelectedCommand : (_butterflySelectedCommand = new DelegateCommand<Butterfly>(ButterflySelected));
+        private bool _isExtraControlsVisible = true;
+        public bool IsExtraControlsVisible
+        {
+            get { return IsExtraControlsVisible; }
+            set { SetProperty(ref _isExtraControlsVisible, value); }
+        }
 
-        private DelegateCommand<Butterfly> _butterflyAppearingCommand;
-        public DelegateCommand<Butterfly> ButterflyAppearingCommand => _butterflyAppearingCommand != null ? _butterflyAppearingCommand : (_butterflyAppearingCommand = new DelegateCommand<Butterfly>(CheckForLoad));
+        private DelegateCommand<Butterfly> _selectedCommand;
+        public DelegateCommand<Butterfly> SelectedCommand => _selectedCommand != null ? _selectedCommand : (_selectedCommand = new DelegateCommand<Butterfly>(ButterflySelected));
+
+        private DelegateCommand<Butterfly> _appearingCommand;
+        public DelegateCommand<Butterfly> AppearingCommand => _appearingCommand != null ? _appearingCommand : (_appearingCommand = new DelegateCommand<Butterfly>(CheckForLoad));
 
         private readonly INavigationService _navigationService;
-        private readonly IButterfliesService _butterflyServicee;
+        private readonly IButterfliesService _butterflyService;
         public MainPageViewModel(INavigationService navigationService, IButterfliesService butterflyService)
         {
             _navigationService = navigationService;
-            _butterflyServicee = butterflyService;
+            _butterflyService = butterflyService;
             Butterfly = new ObservableCollection<Butterfly>();
             LoadButterfly();
         }
 
-        private const int CountForLoad = 10;
+        private const int CountForLoad = 5;
         private async void LoadButterfly()
         {
-            var butterflies = await _butterflyServicee.Load(CountForLoad, _butterflyList.Count);
+            var butterflies = await _butterflyService.Load(CountForLoad, _butterflyList.Count);
             foreach (var item in butterflies)
             {
                 Butterfly.Add(item);
@@ -53,7 +62,7 @@ namespace ButterfliesXFPrism.ViewModels
 
             await _navigationService.NavigateAsync("DetailPage", p);
         }
-
+        
         private void CheckForLoad(Butterfly butterfly)
         {
             var indexCurrent = _butterflyList.IndexOf(butterfly);
